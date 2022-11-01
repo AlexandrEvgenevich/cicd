@@ -1,0 +1,39 @@
+name: rat1
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    env:
+      SECRET_KEY: django-insecure-nw^y+m^wmxza1asgk+)!ua2qx9)g+#v=6%76-9i8i(6eqiw94j
+    services:
+      postges:
+        image: postgres:12
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: netology_stocks_products
+        ports:
+        - 5432:5432
+    steps:
+      - name: Check changes
+        uses: actions/checkout@v2
+
+      - name: python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+
+      - name: libs
+        run: pip install -r requirements.txt
+
+      - name: linting
+        run: flake8 logistic
+
+      - name: tests
+        run: python manage.py test
+
+        
